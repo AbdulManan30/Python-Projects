@@ -1,0 +1,1 @@
+# Entry point — welcome screen, routes to the main menu and handles user input
