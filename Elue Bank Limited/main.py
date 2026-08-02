@@ -2,6 +2,7 @@
 from services.auth_service import check_user_present_in_db
 from getpass import getpass
 from repositories.add_new_account_in_db import add_acc
+from services.account_service import balance_inquiry
 
 def main():
     current_user = None
@@ -42,27 +43,40 @@ def main():
             user = check_user_present_in_db(username, password)
             print(user)
             if user != None:
-                current_user = user
-                print(f'Welcome Back, {current_user['name']}!')
-                print('''
-                            =====================================================
-                                            MAIN MENU
-                            =====================================================
+                print(f'Welcome Back, {user['name']}!')
+                while True:
+                    current_user = user
+                    print('''
+                                =====================================================
+                                                MAIN MENU
+                                =====================================================
 
-                            1. 💰 Balance Inquiry
-                            2. 💵 Deposit Money
-                            3. 💸 Withdraw Money
-                            4. 📜 Transaction History
-                            5. 🔐 Change Password
-                            6. 👤 Account Information
-                            7. 🚪 Logout
-                            8.    Exit
+                                1. 💰 Balance Inquiry
+                                2. 💵 Deposit Money
+                                3. 💸 Withdraw Money
+                                4. 📜 Transaction History
+                                5. 🔐 Change Password
+                                6. 👤 Account Information
+                                7. 🚪 Logout
+                                8.    Exit
 
-                            =====================================================
-                      ''')
-                user_choice = int(input(' Choose an option (1-8): '))
-                if user_choice == 8:
-                    break
+                                =====================================================
+                        ''')
+                    user_choice = int(input(' Choose an option (1-8): '))
+                    match user_choice:
+                        case 1:
+                            balance = balance_inquiry(current_user)
+                            print(f"Your current balance is: {balance}\n")
+                        case 2:
+                            pass
+                        case 3:
+                            pass
+                        case 4:
+                            pass
+                        case 5:
+                            pass
+                    if user_choice == 8:
+                        break
             else:
                 print('Sorry User not found')
                 break
