@@ -3,6 +3,8 @@ from services.auth_service import check_user_present_in_db
 from getpass import getpass
 from repositories.add_new_account_in_db import add_acc
 from services.account_service import balance_inquiry
+from services.account_service import deposit_money
+from services.account_service import check_requests
 
 def main():
     current_user = None
@@ -35,13 +37,11 @@ def main():
         }
     while True:
         print('Welcome to Elue Bank limited: ')
-        user_acc = int(input('''1: Select 1 for login user existing account!!:
-        2: Select 2 for creating new account!: '''))
+        user_acc = int(input('''1: Select 1 for login user existing account!!:\n 2: Select 2 for creating new account!: '''))
         if user_acc == 1:
             username = input('Please Enter your username: ')
             password = input(f'''Please Enter your passwrod for {username} account: ''')
             user = check_user_present_in_db(username, password)
-            print(user)
             if user != None:
                 print(f'Welcome Back, {user['name']}!')
                 while True:
@@ -58,25 +58,39 @@ def main():
                                 5. 🔐 Change Password
                                 6. 👤 Account Information
                                 7. 🚪 Logout
-                                8.    Exit
+                                8.    Requests
+                                9.    Exit
 
                                 =====================================================
                         ''')
-                    user_choice = int(input(' Choose an option (1-8): '))
+                    user_choice = int(input(' Choose an option (1-9): '))
                     match user_choice:
                         case 1:
                             balance = balance_inquiry(current_user)
-                            print(f"Your current balance is: {balance}\n")
+                            print(f"Your current balance is: {balance['balance']}\n")
                         case 2:
-                            pass
+                            account_number = input('Please enter account number where you want to deposit: ')
+                            amount = int(input("Please enter amount that you want to desopit: "))
+                            request = deposit_money(current_user,account_number, amount)
+                            if request['success']: 
+                                print(f'Deposite request send successfully to {request['requested_to']}')
+                            else:
+                                print('User not found with this account number', account_number)
                         case 3:
                             pass
                         case 4:
                             pass
                         case 5:
                             pass
-                    if user_choice == 8:
-                        break
+                        case 6:
+                            pass
+                        case 7:
+                            pass
+                        case 8:
+                            pass
+                        case 9:
+                            requests = check_requests(current_user)
+                            
             else:
                 print('Sorry User not found')
                 break

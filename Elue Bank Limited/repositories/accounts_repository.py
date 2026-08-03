@@ -1,18 +1,12 @@
-from database.db_connection import get_connection
-from psycopg2.extras import RealDictCursor
+from repositories.query_templete import main_func
 
 def check_user_balance(current_user):
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
+    print(current_user)
+    return main_func(
         """
-        SELECT balance
-        FROM accounts
-        WHERE user_id = %s
+                SELECT balance
+                FROM accounts
+                WHERE user_id = %s
         """,
-        (current_user['id'],)
+        (current_user["id"],)
     )
-    user = cursor.fetchone()[0]
-    cursor.close()
-    conn.close()
-    return user
