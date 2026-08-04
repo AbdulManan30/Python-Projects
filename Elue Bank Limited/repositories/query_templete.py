@@ -1,6 +1,8 @@
 from database.db_connection import get_connection
 from psycopg2.extras import RealDictCursor
-def main_func(query, data_tuple=(), fetch_type='one'):
+
+
+def main_func(query, data_tuple=(), fetch_type="one"):
     conn = get_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
@@ -8,11 +10,11 @@ def main_func(query, data_tuple=(), fetch_type='one'):
         cursor.execute(query, data_tuple)
 
         if cursor.description:
-            if fetch_type == 'one':
+            if fetch_type == "one":
                 data = cursor.fetchone()
-            elif fetch_type == 'all':
+            elif fetch_type == "all":
                 data = cursor.fetchall()
-            conn.commit()      # <-- commit before return
+            conn.commit()  # <-- commit before return
             return data
 
         conn.commit()
@@ -20,10 +22,7 @@ def main_func(query, data_tuple=(), fetch_type='one'):
 
     except Exception as e:
         conn.rollback()
-        return {
-            "success": False,
-            "error": str(e)
-        }
+        return {"success": False, "error": str(e)}
 
     finally:
         cursor.close()

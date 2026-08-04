@@ -5,6 +5,12 @@ from repositories.deposite_request import check_deposit_from_user_in_db
 from repositories.deposite_request import fetch_deposit_req_for_current_user
 from repositories.deposite_request import approve_deposit_in_db
 from repositories.deposite_request import delete_req_in_db
+from repositories.accounts_repository import withdraw_money_from_db
+from repositories.transaction_repository import add_transaction_history_in_db
+from repositories.transaction_repository import fetch_all_transaction_from_db
+from repositories.accounts_repository import update_pass_in_db
+
+
 def balance_inquiry(current_user):
     balance = check_user_balance(current_user)
     return balance
@@ -15,15 +21,38 @@ def deposit_money(current_user, account_number, amount):
     if deposit_from_user:
         result = add_deposit(deposit_from_user, current_user, amount)
         return result
-    
+
+
 def check_requests(current_user):
-       data = fetch_deposit_req_for_current_user(current_user)
-       return data
-   
+    data = fetch_deposit_req_for_current_user(current_user)
+    return data
+
+
 def approved_deposit(current_user, selected_request):
     result = approve_deposit_in_db(current_user, selected_request)
     return result
-    
+
+
 def delete_req(selected_request):
     info = delete_req_in_db(selected_request)
     return info
+
+
+def withdraw_money(current_user, amount_to_withdraw):
+    result = withdraw_money_from_db(current_user, amount_to_withdraw)
+    return result
+
+
+def add_transaction(current_user, type, amount):
+    history = add_transaction_history_in_db(current_user, type, amount)
+    return history
+
+
+def get_all_transactions(current_user):
+    transactions = fetch_all_transaction_from_db(current_user)
+    return transactions
+
+
+def change_password(current_user, current_pass, new_pass):
+    result = update_pass_in_db(current_user, current_pass, new_pass)
+    print(result)
