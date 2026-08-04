@@ -32,6 +32,8 @@ def add_deposit(deposit_from_user, current_user, amount):
             deposit_from_user["name"],
         ),
     )
+    if not result["success"]:
+        return result
     return{
         'success': True,
         'requested_to': deposit_from_user["name"]
@@ -95,3 +97,17 @@ def approve_deposit_in_db(current_user, selected_request):
     )
 
     return "Deposit done successfully."
+
+
+
+def delete_req_in_db(selected_req):
+    res = main_func(
+        '''
+        DELETE FROM deposit_requests
+        WHERE id = %s
+        ''', (selected_req['id'])
+    )
+    if res['success']:
+        return True
+    else:
+        return False

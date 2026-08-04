@@ -4,7 +4,7 @@ from repositories.deposite_request import add_deposit
 from repositories.deposite_request import check_deposit_from_user_in_db
 from repositories.deposite_request import fetch_deposit_req_for_current_user
 from repositories.deposite_request import approve_deposit_in_db
-
+from repositories.deposite_request import delete_req_in_db
 def balance_inquiry(current_user):
     balance = check_user_balance(current_user)
     return balance
@@ -24,4 +24,6 @@ def approved_deposit(current_user, selected_request):
     result = approve_deposit_in_db(current_user, selected_request)
     return result
     
-    
+def delete_req(selected_request):
+    info = delete_req_in_db(selected_request)
+    return info

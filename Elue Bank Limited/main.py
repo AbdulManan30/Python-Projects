@@ -6,7 +6,7 @@ from services.account_service import balance_inquiry
 from services.account_service import deposit_money
 from services.account_service import check_requests
 from services.account_service import approved_deposit
-
+from services.account_service import delete_req
 
 def main():
     current_user = None
@@ -105,48 +105,58 @@ def main():
                         case 7:
                             pass
                         case 8:
-                            requests = check_requests(current_user)
-                            if not requests:
-                                print("No pending deposit requests.")
-                                break
-
-                            total_req_id = []
-
-                            for req in requests:
-                                total_req_id.append(req["id"])
-                                print(
-                                    f"Deposit ID: {req['id']}\n"
-                                    f"Request From: {req['requestor_name']}\n"
-                                    f"Amount: {req['amount_requested']}\n"
-                                    f"Status: {req['desopit_status']}\n"
-                                    f"Account Number: {req['account_number']}\n"
-                                )
-
-                            try:
-                                selected_id = int(input(
-                                    "Please enter the Deposit ID you want to approve: "
-                                ))
-                            except ValueError:
-                                print("Please enter a valid numeric Deposit ID.")
-                                break
-
-                            if selected_id not in total_req_id:
-                                print("Please select a correct Deposit ID.")
-                                break
-
-                            selected_request = None
-
-                            for req in requests:
-                                if req["id"] == selected_id and req["desopit_status"] == "Pending":
-                                    selected_request = req
+                            while True:
+                                requests = check_requests(current_user) 
+                                if 'status' in requests and requests['status'] == False:
+                                    print("No pending deposit requests.")
                                     break
 
-                            if selected_request is None:
-                                print("This deposit request is already approved or does not exist.")
-                                break
+                                total_req_id = []
 
-                            result = approved_deposit(current_user, selected_request)
-                            print(result)
+                                for req in requests:
+                                    total_req_id.append(req["id"])
+                                    print(
+                                        f"Deposit ID: {req['id']}\n"
+                                        f"Request From: {req['requestor_name']}\n"
+                                        f"Amount: {req['amount_requested']}\n"
+                                        f"Status: {req['desopit_status']}\n"
+                                        f"Account Number: {req['account_number']}\n"
+                                    )
+
+                                try:
+                                    selected_id = int(input(
+                                        "Please enter the Deposit ID you want to approve: "
+                                    ))
+                                    action = input(
+                                        "Type 'approve' to approve the deposit request or 'delete' to delete the deposit request: "
+                                    ).strip().lower()
+                                except ValueError:
+                                    print("Please enter a valid numeric Deposit ID.")
+                                    break
+
+                                if selected_id not in total_req_id:
+                                    print("Please select a correct Deposit ID.")
+                                    break
+
+                                selected_request = None
+
+                                for req in requests:
+                                    if req["id"] == selected_id and req["desopit_status"] == "Pending":
+                                        selected_request = req
+                                        break
+                                if selected_request is None:
+                                    print("This deposit request is already approved or does not exist.")
+                                    break
+                                if action == "approve":
+                                    result = approved_deposit(current_user, selected_request)
+                                    print(result)
+                                    break
+                                elif action == 'delete':
+                                    info = delete_req(selected_request)
+                                    if info:
+                                        print('Request deleted successfully. ')
+                                    else:
+                                        print('Failed to delete this request.')
 
                         case 9:
                             break
